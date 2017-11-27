@@ -10,17 +10,17 @@
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/style.css" />
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <link rel="stylesheet" href="~/style.css" />
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/style.css" asp-append-version="true" />
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <link rel="stylesheet" href="~/style.css" asp-append-version="true" />
 
     </environment>
 
@@ -44,7 +44,7 @@
                         <form asp-controller="Campaign" asp-action="Index" class="navbar-form navbar-left">
                             <div class="form-group">
                                 <input type="text" name="searchString" class="form-control" placeholder="Search">              
-                            <button type="submit" class="btn btn-default">Submit</button>
+                            <button type="submit" class="btn btn-default">Search</button>
                             </div>
                         </form>
                     </li>
@@ -63,32 +63,38 @@
                             }
                         </ul>
                     </li>
-                    <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            Manage
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-controller="Campaign" asp-action="MyCampaigns"><span class="glyphicon glyphicon-dashboard"></span> My Campaigns</a></li>
-                            <li><a asp-controller="Campaign" asp-action="Index"><span class="glyphicon glyphicon-dashboard"></span> All Campaigns</a></li>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li>
-                                    <a asp-controller="User" asp-action="Index">
-                                        <span class="glyphicon glyphicon-user">
-                                        </span> Manage Users
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-controller="Campaign" asp-action="AdminIndex">
-                                        <span class="glyphicon glyphicon-user">
-                                        </span> Manage Campaigns
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </li>
-                </ul>
+                    @{
+                        if (User.Identities.Any(u => u.IsAuthenticated))
+                        {
+                            <li>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Manage
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-controller="Campaign" asp-action="MyCampaigns"><span class="glyphicon glyphicon-dashboard"></span> My Campaigns</a></li>
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li>
+                                            <a asp-controller="User" asp-action="Index">
+                                                <span class="glyphicon glyphicon-user">
+                                                </span> Manage Users
+                                            </a>
+                                        </li>
+                                            <li>
+                                                <a asp-controller="Campaign" asp-action="AdminIndex">
+                                                    <span class="glyphicon glyphicon-user">
+                                                    </span> Manage Campaigns
+                                                </a>
+                                            </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                    <li><a asp-controller="Campaign" asp-action="Index"><span class="glyphicon glyphicon-dashboard"></span> All Campaigns</a></li>
+               </ul>                  
                 <ul class="nav navbar-nav navbar-right">
                     @if (!User.Identities.Any(u => u.IsAuthenticated))
                     {
@@ -110,10 +116,10 @@
             </div>
         </div>
     </nav>
-    <div>
+    <section>
         @RenderBody()
-    </div>
-    <footer class=" col-sx-12 col-md-l col-lg-12 panel-footer" id="footer">
+    </section>
+    <footer class=" panel-footer" id="footer">
             <div class="footer">&copy; 2017 - StickerFire <a asp-controller="Home" asp-action="About">Meet the Devs</a></div>
     </footer>
 </body>
